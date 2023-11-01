@@ -1,6 +1,6 @@
 "use strict";
 const { Model } = require("sequelize");
-import { hashPassword } from "../helpers/bcrypt";
+const { hashPassword } = require("../helpers/bcrypt");
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     /**
@@ -9,14 +9,57 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      User.hasMany(models.Favorite, { foreignKey: "UserId" });
     }
   }
   User.init(
     {
-      email: DataTypes.STRING,
-      username: DataTypes.STRING,
-      password: DataTypes.STRING,
+      email: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          isEmail: {
+            args: true,
+            msg: "Must be email format",
+          },
+          notEmpty: {
+            args: true,
+            msg: "Email must be filled",
+          },
+          notNull: {
+            args: true,
+            msg: "Email cannot be null",
+          },
+        },
+      },
+      username: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notEmpty: {
+            args: true,
+            msg: "Username must be filled",
+          },
+          notNull: {
+            args: true,
+            msg: "Username cannot be null",
+          },
+        },
+      },
+      password: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notEmpty: {
+            args: true,
+            msg: "Password must be filled",
+          },
+          notNull: {
+            args: true,
+            msg: "Password cannot be null",
+          },
+        },
+      },
     },
     {
       hooks: {
