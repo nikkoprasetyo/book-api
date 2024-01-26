@@ -6,6 +6,7 @@ class UserController {
   static async register(req, res, next) {
     try {
       const { email, username, password } = req.body;
+      //Create validation for checking any duplicate emails in database
       const createdUser = await User.create({ email, username, password });
       res.status(201).json({
         id: createdUser.id,
@@ -31,14 +32,12 @@ class UserController {
         id: findUser.id,
         username: findUser.username,
       });
-      res
-        .status(200)
-        .json({
-          access_token,
-          id: findUser.id,
-          email: findUser.email,
-          username: findUser.username,
-        });
+      res.status(200).json({
+        access_token,
+        id: findUser.id,
+        email: findUser.email,
+        username: findUser.username,
+      });
     } catch (error) {
       res.send(error);
     }
